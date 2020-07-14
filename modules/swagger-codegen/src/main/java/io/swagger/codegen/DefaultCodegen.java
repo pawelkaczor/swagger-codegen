@@ -735,7 +735,7 @@ public class DefaultCodegen {
             throw new RuntimeException("Empty method name (operationId) not allowed");
         }
 
-        return operationId;
+        return org.apache.commons.text.CaseUtils.toCamelCase(operationId, false, new char[]{' ', '.'});
     }
 
     /**
