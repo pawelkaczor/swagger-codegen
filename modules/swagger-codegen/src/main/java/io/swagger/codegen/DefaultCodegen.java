@@ -741,8 +741,7 @@ public class DefaultCodegen {
         if (StringUtils.isEmpty(operationId)) {
             throw new RuntimeException("Empty method name (operationId) not allowed");
         }
-
-        return org.apache.commons.text.CaseUtils.toCamelCase(operationId, false, new char[]{' ', '.'});
+        return operationId;
     }
 
     /**
@@ -3033,7 +3032,9 @@ public class DefaultCodegen {
      */
     protected String getOrGenerateOperationId(Operation operation, String path, String httpMethod) {
         String operationId = operation.getOperationId();
-        if (StringUtils.isBlank(operationId)) {
+        if (StringUtils.isBlank(operationId) && StringUtils.isNotBlank(operation.getDescription())) {
+            operationId = sanitizeName(org.apache.commons.text.CaseUtils.toCamelCase(operation.getDescription(), false, ' ', '.'));
+        } else if (StringUtils.isBlank(operationId)) {
             String tmpPath = path;
             tmpPath = tmpPath.replaceAll("\\{", "");
             tmpPath = tmpPath.replaceAll("\\}", "");
